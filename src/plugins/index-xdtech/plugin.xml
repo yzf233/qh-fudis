@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="index-xdtech"
+   name="Xdtech Indexing Filter"
+   version="1.0.0"
+   provider-name="nutch.org">
+
+
+   <runtime>
+      <library name="index-xdtech.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <extension id="org.apache.nutch.indexer.xdtech"
+              name="Xdtech Indexing Filter"
+              point="org.apache.nutch.indexer.IndexingFilter">
+      <implementation id="XdtechIndexingFilter"
+                      class="org.apache.nutch.indexer.xdtech.XdtechIndexingFilter"/>
+   </extension>
+
+   <!--
+   <extension id="org.apache.nutch.searcher.more.MoreQueryFilter"
+              name="Nutch More Query Filter"
+              point="org.apache.nutch.searcher.QueryFilter">
+      <implementation id="MoreQueryFilter"
+                      class="org.apache.nutch.searcher.more.MoreQueryFilter"
+                      raw-fields="more"/>
+   </extension>
+   -->
+
+</plugin>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<include file="struts-default.xml" />
+
+	<package name="default" extends="struts-default">
+		<interceptors>
+			<interceptor name="xdsynchro"
+				class="com.xx.platform.web.interceptor.CheckSynchroInterceptor"/>
+			<interceptor name="auth"
+				class="com.xx.platform.web.interceptor.AuthorizationInterceptor" />
+			<interceptor name="servlet"
+				class="com.xx.platform.web.interceptor.ServletInterceptor" />
+			<interceptor name="timer"
+				class="com.xx.platform.web.interceptor.TimerInterceptor" />
+			<interceptor name="XdException"
+				class="com.xx.platform.web.interceptor.XDExceptionInteceptor">
+			</interceptor>
+			<interceptor-stack name="searchStrack">
+				<!--interceptor-ref name="auth" /-->
+				<interceptor-ref name="servlet" />
+				<!--<interceptor-ref name="timer" />-->
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+			<interceptor-stack name="openOperStrack">
+				<interceptor-ref name="servlet" />
+				<!--<interceptor-ref name="timer" />-->
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+			<interceptor-stack name="consoleStrack">
+				<interceptor-ref name="XdException"></interceptor-ref>
+				<interceptor-ref name="auth" />
+				<interceptor-ref name="servlet" />
+				<!--<interceptor-ref name="timer" />-->
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="xdsynchro" />
+			</interceptor-stack>
+		</interceptors>
+
+
+		<default-interceptor-ref name="consoleStrack" />
+		<global-results>
+			<result name="synchro">/admin/cannotConnect.jsp</result>
+			<result name="error">/error.jsp</result>
+		</global-results>
+	</package>
+	<package name="search" namespace="/" extends="default">
+		<global-results>
+			<result name="projectlogin">${defualtUrl}</result>
+			<result name="login">/admin/login.jsp</result>
+			<result name="checkiperror">/IPForbidden.jsp</result>
+			<result name="projectSearchError">/projectSearchError.jsp</result>
+		</global-results>
+	</package>
+</struts>

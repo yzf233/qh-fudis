@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="query-basic"
+   name="Basic Query Filter"
+   version="1.0.0"
+   provider-name="nutch.org">
+
+
+
+   <runtime>
+      
+   </runtime>
+
+   <extension id="org.apache.nutch.searcher.xdht"
+              name="Nutch Basic Query Filter"
+              point="org.apache.nutch.searcher.QueryFilter">
+      <implementation id="BasicQueryFilter"
+                      class="org.apache.nutch.searcher.xdht.XDQueryFilter"
+                      fields="content"/>
+   </extension>
+
+</plugin>

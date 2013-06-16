@@ -1,0 +1,924 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<include file="struts-search.xml" />
+	
+	<package name="auth" namespace="/"  extends="search">
+		<action name="toSearch" class="com.xx.platform.web.actions.search.SearchAction" method="toSearch">
+			<interceptor-ref name="openOperStrack"/>
+			<result>/index.jsp</result>
+		</action>
+		<action name="pSearch" class="com.xx.platform.web.actions.search.SearchAction" method="psearch">
+			<interceptor-ref name="openOperStrack"/>
+			<result>${defualtUrl}</result>
+		</action>
+		<action name="suggest" class="com.xx.platform.web.actions.search.SearchAction" method="suggest">
+			<interceptor-ref name="searchStrack"/>
+			<result>/search/suggest.jsp</result>
+			<result name="input">/search/suggest.jsp</result>
+		</action>
+		<!-- 通过导航查询 -->
+		<action name="searchByGuideAjax" class="com.xx.platform.web.actions.search.SearchAction" method="searchByGuideAjax">
+       		<interceptor-ref name="openOperStrack"/>
+			<result>${defualtUrl}</result>
+        </action>
+		<action name="plogin" class="com.xx.platform.web.actions.auth.Login" method="projectUserLogin">
+			<interceptor-ref name="openOperStrack"/>
+			<result>${defualtUrl}</result>
+		</action>
+		<action name="plogintest" class="com.xx.platform.web.actions.auth.Login" method="loginTest">
+			<interceptor-ref name="openOperStrack"/>
+			<result>${defualtUrl}</result>
+		</action>
+		<action name="pindextest" class="com.xx.platform.web.actions.search.SearchAction" method="pindextest">
+			<interceptor-ref name="openOperStrack"/>
+			<result>${defualtUrl}</result>
+		</action>
+		<action name="fileCrawler" class="com.xx.platform.web.actions.DirectoryAjaxAction" method="exploreDirectory">
+
+		</action>
+		<action name="index" class="com.xx.platform.web.actions.auth.Login" method="execute">
+			<interceptor-ref name="auth"/>
+			<interceptor-ref name="openOperStrack"/>
+			<result>/pages/templet/index.jsp</result>
+		</action>
+		<action name="xmldelete" class="com.xx.platform.web.actions.index.xmlAction" method="deleteOneIndexByField">
+		<interceptor-ref name="searchStrack"/>
+			<result name="success">/search/xmlresult.jsp</result>
+		</action>
+		<action name="xmldeletedocid" class="com.xx.platform.web.actions.index.xmlAction" method="deleteOneIndexByID">
+		<interceptor-ref name="searchStrack"/>
+			<result name="success">/search/xmlresult.jsp</result>
+		</action>
+		<action name="xmlpush" class="com.xx.platform.web.actions.index.xmlAction" method="push">
+		<interceptor-ref name="searchStrack"/>
+			<result name="success">/search/xmlresult.jsp</result>
+		</action>
+		<action name="xmlmerger" class="com.xx.platform.web.actions.index.xmlAction" method="merger">
+		<interceptor-ref name="searchStrack"/>
+			<result name="success">/search/xmlresult.jsp</result>
+		</action>
+		<action name="search" class="com.xx.platform.web.actions.search.SearchAction" method="search">
+			<interceptor-ref name="searchStrack"/>
+			<result>${defualtUrl}</result>
+            <result name="input">/</result>
+			<result name="xml">/search/resultXML.jsp</result>
+		</action>
+		<action name="xmlsearch" class="com.xx.platform.web.actions.search.SearchAction" method="xmlSearch">
+			<interceptor-ref name="searchStrack"/>
+			<result>/search/resultXMLs.jsp</result>
+		</action>
+		<action name="searchs" class="com.xx.platform.web.actions.search.SearchAction" method="advance">
+			<interceptor-ref name="searchStrack"/>
+			<result>/search/result.jsp</result>
+			<result name="input">/</result>
+		</action>
+		<action name="cached" class="com.xx.platform.web.actions.search.SearchAction" method="getCached">
+			<interceptor-ref name="searchStrack"/>
+			<!-- <result>/search/cached.jsp</result> -->
+			<result>${defualtUrl}</result>
+		</action>	
+        <action name="cacheds" class="com.xx.platform.web.actions.search.SearchAction" method="getCached">
+			<interceptor-ref name="searchStrack"/>
+			<result>/search/cacheds.jsp</result>
+		</action>
+		<action name="welcome" class="com.xx.platform.web.actions.auth.Login" method="execute">
+			<interceptor-ref name="openOperStrack"/>
+			<result>/admin/login.jsp</result>
+		</action>
+		<action name="login" class="com.xx.platform.web.actions.auth.Login" method="login">
+			<interceptor-ref name="openOperStrack"/>
+			<result name="input" type="redirect-action">welcome</result>
+            <result type="redirect-action">index</result>
+        </action>
+		<action name="logout" class="com.xx.platform.web.actions.auth.Login" method="logout">
+        </action>
+        		<action name="setdir" class="com.xx.platform.web.actions.system.ControlAction" method="setIndexDir">
+			<result type="chain">
+				<param name="actionName">index</param>
+				<param name="namespace">/</param>
+			</result>
+        </action>
+         
+	</package>
+
+   <!--数据采集开始-->
+	<package name="robot" namespace="/crawl" extends="search">
+		<result-types>
+            <result-type name="xdtech-redirect-action" class="com.xx.platform.web.dispatcher.ServletActionRedirectResult"/>
+        </result-types>
+
+		<!-- 同义词管理开始 -->
+	<action name="synonymy" class="com.xx.platform.web.actions.crawl.SynonymyAction" method="list">
+            <result>/pages/model/crawl/synonymy.jsp</result>
+        </action>
+		<action name="synonymyAdd" class="com.xx.platform.web.actions.crawl.SynonymyAction" method="add">
+			<result name="input" type="chain">synonymy</result>
+            <result type="redirect-action">synonymy</result>
+        </action>
+		<action name="synonymyEdit" class="com.xx.platform.web.actions.crawl.SynonymyAction" method="edit">
+            <result>/pages/model/crawl/synonymyEdit.jsp</result>
+        </action>
+		<action name="synonymyEditDo" class="com.xx.platform.web.actions.crawl.SynonymyAction" method="editDo">
+			<result name="input" type="chain">synonymyEdit</result>
+            <result type="redirect-action">synonymy</result>
+        </action>
+		<!-- 同义词管理结束 -->
+
+		<action name="category" class="com.xx.platform.web.actions.crawl.CategoryAction" method="list">
+            <result>/pages/model/crawl/category.jsp</result>
+        </action>
+		<action name="categoryAdd" class="com.xx.platform.web.actions.crawl.CategoryAction" method="addCategory">
+			<result name="input" type="chain">category</result>
+            <result type="redirect-action">category</result>
+        </action>
+		<action name="categoryEdit" class="com.xx.platform.web.actions.crawl.CategoryAction" method="editCategory">
+            <result>/pages/model/crawl/categoryEdit.jsp</result>
+        </action>
+		<action name="categoryEditDo" class="com.xx.platform.web.actions.crawl.CategoryAction" method="editCategoryDo">
+			<result name="input" type="chain">categoryEdit</result>
+            <result type="redirect-action">category</result>
+        </action>
+		<action name="sitemamage" class="com.xx.platform.web.actions.crawl.SiteManageAction" method="list">
+			<result>/pages/model/crawl/sitemamage.jsp</result>
+        </action>
+		<action name="sitemamageAdd" class="com.xx.platform.web.actions.crawl.SiteManageAction" method="addDo">
+			<result type="xdtech-redirect-action">
+				<param name="actionName">sitemamage</param>
+				<param name="page">${page}</param>
+				<param name="sname">${sname}</param>
+			</result>
+        </action>
+		<action name="sitemamageEdit" class="com.xx.platform.web.actions.crawl.SiteManageAction" method="edit">
+			<result>/pages/model/crawl/sitemamageEdit.jsp</result>
+        </action>
+		<action name="sitemamageEditDo" class="com.xx.platform.web.actions.crawl.SiteManageAction" method="editDo">
+			<result type="xdtech-redirect-action">
+				<param name="actionName">sitemamage</param>
+				<param name="page">${page}</param>
+				<param name="sname">${sname}</param>
+			</result>
+        </action>
+		<action name="subsitemanage" class="com.xx.platform.web.actions.crawl.SubSiteManageAction" method="list">
+            <result>/pages/model/crawl/subsitemanage.jsp</result>
+        </action>
+		<action name="webDbDel" class="com.xx.platform.web.actions.crawl.SubSiteManageAction" method="del">
+            <result type="xdtech-redirect-action">
+				<param name="actionName">subsitemanage</param>
+				<param name="page">${page}</param>
+			</result>
+        </action>
+		<action name="filterrule" class="com.xx.platform.web.actions.crawl.FilterRuleAction" method="list">
+            <result>/pages/model/crawl/filterrule.jsp</result>
+        </action>
+		<action name="addFilterRule" class="com.xx.platform.web.actions.crawl.FilterRuleAction" method="addDo">
+            <result type="redirect-action">filterrule</result>
+        </action>
+		<action name="editFilterRule" class="com.xx.platform.web.actions.crawl.FilterRuleAction" method="edit">
+            <result>/pages/model/crawl/filterruleEdit.jsp</result>
+        </action>
+		<action name="editFilterRuleDo" class="com.xx.platform.web.actions.crawl.FilterRuleAction" method="editDo">
+            <result type="redirect-action">filterrule</result>
+        </action>
+		<action name="crawlerrule" class="com.xx.platform.web.actions.crawl.CrawlerAction" method="list">
+            <result>/pages/model/crawl/crawlerrule.jsp</result>
+        </action>
+		<action name="crawlerruleAddDo" class="com.xx.platform.web.actions.crawl.CrawlerAction" method="addDo">
+            <result type="xdtech-redirect-action">
+				<param name="actionName">crawlerrule</param>
+				<param name="page">${page}</param>
+				<param name="sname">${sname}</param>
+			</result>
+        </action>
+		<action name="crawlerruleEdit" class="com.xx.platform.web.actions.crawl.CrawlerAction" method="edit">
+            <result>/pages/model/crawl/crawlerruleEdit.jsp</result>
+        </action>
+		<action name="crawlerruleEditDo" class="com.xx.platform.web.actions.crawl.CrawlerAction" method="editDo">
+			<result type="xdtech-redirect-action">
+				<param name="actionName">crawlerrule</param>
+				<param name="page">${page}</param>
+				<param name="sname">${sname}</param>
+			</result>
+        </action>
+		<action name="crawlerlist" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/crawl/crawlerlist.jsp</result>
+        </action>
+		<action name="drawrule" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/crawl/drawrule.jsp</result>
+        </action>
+
+		<action name="ndestruct" class="com.xx.platform.web.actions.crawl.NdeStructAction" method="list">
+            <result>/pages/model/crawl/ndestruct.jsp</result>
+        </action>
+		<action name="ndestructAddDo" class="com.xx.platform.web.actions.crawl.NdeStructAction" method="addDo">
+            <result type="redirect-action">ndestruct</result>
+        </action>
+		<action name="ndestructEdit" class="com.xx.platform.web.actions.crawl.NdeStructAction" method="edit">
+            <result>/pages/model/crawl/ndestructEdit.jsp</result>
+        </action>
+		<action name="ndestructEditDo" class="com.xx.platform.web.actions.crawl.NdeStructAction" method="editDo">
+            <result type="redirect-action">ndestruct</result>
+        </action>
+
+		<action name="urlfilter" class="com.xx.platform.web.actions.crawl.UrlfilterregAction" method="list">
+            <result>/pages/model/crawl/urlfilter.jsp</result>
+        </action>
+		<action name="urlfilterAddDo" class="com.xx.platform.web.actions.crawl.UrlfilterregAction" method="addDo">
+            <result type="xdtech-redirect-action">
+				<param name="actionName">urlfilter</param>
+				<param name="page">${page}</param>
+				<param name="sname">${sname}</param>
+			</result>
+        </action>
+		<action name="urlfilterEdit" class="com.xx.platform.web.actions.crawl.UrlfilterregAction" method="edit">
+            <result>/pages/model/crawl/urlfilterEdit.jsp</result>
+        </action>
+		<action name="urlfilterEditDo" class="com.xx.platform.web.actions.crawl.UrlfilterregAction" method="editDo">
+            <result type="xdtech-redirect-action">
+				<param name="actionName">urlfilter</param>
+				<param name="page">${page}</param>
+				<param name="sname">${sname}</param>
+			</result>
+        </action>
+		<!--process rule-->
+
+
+		<action name="processrule" class="com.xx.platform.web.actions.crawl.MetaProcessRuleAction" method="list">
+            <result>/pages/model/crawl/metaprocessrule.jsp</result>
+        </action>
+		<action name="processruleAddDo" class="com.xx.platform.web.actions.crawl.MetaProcessRuleAction" method="add">
+            <result type="redirect-action">processrule</result>
+        </action>
+
+		<action name="processruleEdit" class="com.xx.platform.web.actions.crawl.MetaProcessRuleAction" method="edit">
+            <result>/pages/model/crawl/metaprocessruleEdit.jsp</result>
+        </action>
+		<action name="processruleEditDo" class="com.xx.platform.web.actions.crawl.MetaProcessRuleAction" method="editDo">
+            <result type="redirect-action">processrule</result>
+        </action>
+
+       <!--process rule-->
+
+
+		<action name="parserule" class="com.xx.platform.web.actions.crawl.ParserRuleAction" method="list">
+            <result>/pages/model/crawl/parserule.jsp</result>
+        </action>
+		<action name="copyparserule" class="com.xx.platform.web.actions.crawl.CrawlerAction" method="copy">
+            
+        </action>
+		<action name="pasetparserule" class="com.xx.platform.web.actions.crawl.CrawlerAction" method="paste">
+			<result type="xdtech-redirect-action">
+				<param name="actionName">parserulebyid</param>
+				<param name="id">${crawler.id}</param>
+			</result>
+        </action>
+		<action name="addParseRuleDo" class="com.xx.platform.web.actions.crawl.ParserRuleAction" method="addDo">
+			<result type="xdtech-redirect-action" name="patest">
+				<param name="actionName">parserulebyid</param>
+				<param name="id">${parserRule.parentid}</param>
+			</result>
+			<result type="xdtech-redirect-action">
+				<param name="actionName">parserule</param>
+				<param name="page">${page}</param>
+			</result>
+        </action>
+		<action name="parserulebyid" class="com.xx.platform.web.actions.crawl.ParserRuleAction" method="listByID">
+            <result>/pages/model/crawl/parseruletest.jsp</result>
+        </action>
+		<action name="parseruletest" class="com.xx.platform.web.actions.crawl.ParserRuleAction" method="test">
+            <result>/pages/model/crawl/parseruletestr.jsp</result>
+        </action>
+		<action name="editParseRule" class="com.xx.platform.web.actions.crawl.ParserRuleAction" method="edit">
+            <result>/pages/model/crawl/parseruleEdit.jsp</result>
+			<result name="patest">/pages/model/crawl/tparseruleEdit.jsp</result>
+        </action>
+		<action name="editParseRuleDo" class="com.xx.platform.web.actions.crawl.ParserRuleAction" method="editDo">
+			<result type="xdtech-redirect-action" name="patest">
+				<param name="actionName">parserulebyid</param>
+				<param name="id">${id}</param>
+			</result>
+            <result type="xdtech-redirect-action">
+				<param name="actionName">parserule</param>
+				<param name="page">${page}</param>
+			</result>
+        </action>
+		<action name="urlGenerator" class="com.xx.platform.web.actions.crawl.UrlGeneratorAction" method="list">
+            <result>/pages/model/crawl/urlGenerator.jsp</result>
+        </action>
+		<action name="proregion" class="com.xx.platform.web.actions.crawl.ProregionAction" method="list">
+            <result>/pages/model/crawl/proregion.jsp</result>
+        </action>
+		<action name="proregionAdd" class="com.xx.platform.web.actions.crawl.ProregionAction" method="addDo">
+            <result type="redirect-action">proregion</result>
+        </action>
+		<action name="proregionEdit" class="com.xx.platform.web.actions.crawl.ProregionAction" method="edit">
+            <result>/pages/model/crawl/proregionEdit.jsp</result>
+        </action>
+		<action name="proregionEditDo" class="com.xx.platform.web.actions.crawl.ProregionAction" method="editDo">
+            <result type="redirect-action">proregion</result>
+        </action>
+		<action name="addgen" class="com.xx.platform.web.actions.crawl.UrlGeneratorAction" method="addDo">
+            <result type="chain">urlGenerator</result>
+        </action>
+		<action name="editurlgen" class="com.xx.platform.web.actions.crawl.UrlGeneratorAction" method="edit">
+            <result>/pages/model/crawl/editUrlGenerator.jsp</result>
+        </action>
+		<action name="editurlgendo" class="com.xx.platform.web.actions.crawl.UrlGeneratorAction" method="editDo">
+            <result type="chain">urlGenerator</result>
+        </action>
+		<action name="generator" class="com.xx.platform.web.actions.crawl.UrlGeneratorAction" method="generator">
+            <result type="redirect-action">urlGenerator</result>
+        </action>
+		<action name="start" class="com.xx.platform.web.actions.crawl.CrawlAction" method="start">
+            <result type="redirect">/index.dhtml</result>
+        </action>
+		<action name="stop" class="com.xx.platform.web.actions.crawl.CrawlAction" method="stop">
+            <result type="redirect">/index.dhtml</result>
+        </action>
+		<action name="startFileCrawler" class="com.xx.platform.web.actions.crawl.CrawlAction" method="startFileCrawler">
+            <result type="redirect">/index.dhtml</result>
+        </action>
+	</package>
+   <!--数据采集结束-->
+
+
+	<!--索引系统开始-->
+	<package name="index" namespace="/index" extends="search">
+		<result-types>
+            <result-type name="xdtech-redirect-action" class="com.xx.platform.web.dispatcher.ServletActionRedirectResult"/>
+        </result-types>
+		<action name="wordstock" class="com.xx.platform.web.actions.index.WordAction" method="list">
+            <result>/pages/model/index/wordstock.jsp</result>
+        </action>
+		<action name="viewWordFile" class="com.xx.platform.web.actions.index.WordAction" method="viewWordFile">
+            <result type="chain">wordstock</result>
+        </action>
+		<action name="addNewWord" class="com.xx.platform.web.actions.index.WordAction" method="addNewWord">
+            <result type="chain">wordstock</result>
+        </action>
+		<action name="searchWord" class="com.xx.platform.web.actions.index.WordAction" method="searchWord">
+            <result type="chain">wordstock</result>
+        </action>
+		<action name="newword" class="com.xx.platform.web.actions.BaseAction" method="execute">
+			<result>/pages/model/index/newword.jsp</result>
+        </action>
+		<action name="syncrule" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/index/syncrule.jsp</result>
+        </action>
+		<action name="words" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/index/words.jsp</result>
+        </action>
+
+		<action name="newscreenword" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/index/newscreenword.jsp</result>
+        </action>
+		<action name="screenwords" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/index/screenwords.jsp</result>
+        </action>
+		<action name="indexfield" class="com.xx.platform.web.actions.index.IndexAction" method="list">
+            <result>/pages/model/index/indexfield.jsp</result>
+        </action>
+		<action name="addIndexFieldDo" class="com.xx.platform.web.actions.index.IndexAction" method="addDo">
+			<result name="input" type="chain">indexfield</result>
+            <result type="redirect-action">indexfield</result>
+        </action>
+        <action name="getIndex" class="com.xx.platform.web.actions.index.IndexViewAction" method="getIndex">
+			<result name="success">/pages/model/index/indexview.jsp</result>
+			<result name="input">/pages/model/index/indexviewerror.jsp</result>
+        </action>
+        <action name="refreshIndex" class="com.xx.platform.web.actions.index.IndexViewAction" method="refreshTermsnum">
+			<result name="success">/pages/model/index/indexview.jsp</result>
+			<result name="input">/pages/model/index/indexviewerror.jsp</result>
+        </action>
+		<action name="indexmerger" class="com.xx.platform.web.actions.index.IndexViewAction" method="merger">
+			<result name="success">/pages/model/index/indexmessage.jsp</result>
+        </action>
+        <action name="getIndexToken" class="com.xx.platform.web.actions.index.IndexViewAction" method="getIndexToken">
+			<result name="success">/pages/model/index/indextokenstring.jsp</result>
+			<result name="input">/pages/model/index/indexviewerror.jsp</result>
+        </action>
+		<action name="setdir" class="com.xx.platform.web.actions.system.ControlAction" method="setIndexDir">
+			<result name="input" type="xdtech-redirect-action">
+				<param name="actionName">indexfield</param>
+				<param name="indexmessage">${indexmessage}</param>
+			</result>
+        </action>
+		<action name="indexFieldEdit" class="com.xx.platform.web.actions.index.IndexAction" method="edit">
+            <result>/pages/model/index/indexfieldEdit.jsp</result>
+        </action>
+		<action name="indexFieldEditDo" class="com.xx.platform.web.actions.index.IndexAction" method="editDo">
+			<result name="input" type="chain">indexFieldEdit</result>
+            <result type="redirect-action">indexfield</result>
+        </action>
+		<action name="indexManage" class="com.xx.platform.web.actions.index.IndexAction" method="execute">
+            <result>/pages/model/index/indexOpe.jsp</result>
+        </action>
+		<action name="deleteIndex" class="com.xx.platform.web.actions.index.IndexAction" method="delIndex">
+			<result type="chain">       
+				<param name="actionName">search</param>
+				<param name="namespace">/</param>
+			</result>
+        </action>
+		<action name="viewIndex" class="com.xx.platform.web.actions.index.IndexAction" method="viewIndex">
+            <result>/pages/model/index/viewIndex.jsp</result>
+        </action>
+
+	</package>
+	<!--索引系统结束-->
+
+	<!--数据库管理开始-->
+	<package name="database" namespace="/database" extends="search">
+		<result-types>
+            <result-type name="xdtech-redirect-action" class="com.xx.platform.web.dispatcher.ServletActionRedirectResult"/>
+        </result-types>
+
+		<action name="filedirtest" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="test">
+            <result>/pages/model/database/filedirtest.jsp</result>
+        </action>
+
+		<action name="filedir" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="list">
+            <result>/pages/model/database/filedir.jsp</result>
+        </action>
+		<action name="addFiledir" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="addDo">
+            <result type="redirect-action">filedir</result>
+			<result name="input" type="chain">filedir</result>
+        </action>
+		<action name="editFiledirDo" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="editDo">
+			<result type="redirect-action">filedir</result>
+			<result name="input" type="chain">filedir</result>
+        </action>
+		<action name="upfile" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="editDo">
+            <result>/pages/model/database/fileupload.jsp</result>
+        </action>
+
+		<action name="editFileDir" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="edit">
+            <result>/pages/model/database/filedirEdit.jsp</result>
+        </action>
+
+		<action name="editFileDirDo" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="editDo">
+			<result type="redirect-action">filedir</result>
+			<result name="input" type="chain">filedir</result>
+        </action> 
+		<!--网络目录开始-->
+
+
+		<action name="netFiledir" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="list">
+            <result>/pages/model/database/netfiledir.jsp</result>
+        </action>
+		<action name="addNetFiledir" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="addnetDo">
+            <result type="redirect-action">netFiledir</result>
+			<result name="input" type="chain">netFiledir</result>
+        </action>
+		<action name="editNetFileDir" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="edit">
+            <result>/pages/model/database/netfiledirEdit.jsp</result>
+        </action>
+		<action name="editNetFiledirDo" class="com.xx.platform.web.actions.database.FileDirectoryAction" method="editNetDo">
+			<result type="redirect-action">netFiledir</result>
+			<result name="input" type="chain">netFiledir</result>
+        </action>
+		<!--网络目录结束-->
+
+		<action name="database" class="com.xx.platform.web.actions.database.DatabaseAction" method="list">
+            <result>/pages/model/database/database.jsp</result>
+        </action>
+		<action name="datapastetest" class="com.xx.platform.web.actions.database.DatabaseAction" method="list">
+            <result>/pages/model/database/databasepastetest.jsp</result>
+        </action>
+        
+        <action name="checkConnection" class="com.xx.platform.web.actions.database.DatabaseAction" method="checkConnection">
+        </action>
+		
+		<action name="dbstables" class="com.xx.platform.web.actions.database.DatabaseAction" method="dbstables">
+            <result name="success">/pages/model/database/dbtable.jsp</result>
+            <result name="input" type="xdtech-redirect-action">
+				<param name="actionName">database</param>
+				<param name="message">${message}</param>
+			</result>
+        </action>
+		<action name="databasecopy" class="com.xx.platform.web.actions.database.DatabaseAction" method="copy">
+             
+        </action>
+		<action name="databasepaste" class="com.xx.platform.web.actions.database.DatabaseAction" method="paste">
+            <result>/pages/model/database/databasepaste.jsp</result>
+        </action>
+		<action name="addDatabase" class="com.xx.platform.web.actions.database.DatabaseAction" method="addDatabase">
+            <result type="redirect-action">datapastetest</result>
+			<result name="input" type="chain">datapastetest</result>
+			<result type="redirect-action">database</result>
+			<result name="testreturn" type="chain">database</result>
+        </action>
+		<action name="editDatabase" class="com.xx.platform.web.actions.database.DatabaseAction" method="editDatabase">
+			<result>/pages/model/database/databaseEdit.jsp</result>
+        </action>
+		<action name="editDatabaseDo" class="com.xx.platform.web.actions.database.DatabaseAction" method="editDatabaseDo">
+			<result type="redirect-action">database</result>
+			<result name="input" type="chain">database</result>
+        </action>
+		<action name="dbtable" class="com.xx.platform.web.actions.database.DbtableAction" method="list">
+            <result>/pages/model/database/dbtable.jsp</result>
+        </action>
+		<action name="getdbtable" class="com.xx.platform.web.actions.database.DbtableAction" method="getDatabasetable">
+        </action>
+		<action name="addDbtable" class="com.xx.platform.web.actions.database.DbtableAction" method="addDbtable">
+           <result type="chain">dbstables</result>
+        </action>
+		<action name="edTable" class="com.xx.platform.web.actions.database.DbtableAction" method="editTable">
+            <result type="redirect-action">dbtable</result>
+			<result name="input" type="chain">dbtable</result>
+        </action>
+		<action name="delDbtable" class="com.xx.platform.web.actions.database.DbtableAction" method="delDbtable">
+            <result type="chain">dbstables</result>
+        </action>
+		<action name="editTableproperty" class="com.xx.platform.web.actions.database.DbtableAction" method="editTableproperty">
+            <result>/pages/model/database/tableproperty.jsp</result>
+			<result name="showsql">/pages/model/database/showsql.jsp</result>
+			<result name="input">/pages/model/database/topinion.jsp</result>
+        </action>
+        <action name="refreshsign" class="com.xx.platform.web.actions.database.DbtableAction" method="signlist">
+            <result>/pages/model/database/signlist.jsp</result>
+        </action>
+		<action name="dbtableRefreshAll" class="com.xx.platform.web.actions.database.DbtableAction" method="refreshTableAll">
+            <result type="xdtech-redirect-action">refreshsign
+			<param name="actionName">refreshsign</param>
+			<param name="message">${message}</param>
+			</result>
+        </action>
+		<action name="delTableProperty" class="com.xx.platform.web.actions.database.DbtableAction" method="delTableProperty">
+            <result type="chain">editTableproperty</result>
+        </action>
+		<action name="setTablePropertyDefaultValue" class="com.xx.platform.web.actions.database.DbtableAction" method="setTablePropertyDefaultValue">
+            <result type="chain">editTableproperty</result>
+        </action>
+		<action name="getTableProperty" class="com.xx.platform.web.actions.crawl.CrawlerAction" method="getTableProperty">
+        </action>
+		<action name="tablePropertycopy" class="com.xx.platform.web.actions.database.DbpropertyAction" method="copy">
+        </action>
+		<action name="tablePropertypaste" class="com.xx.platform.web.actions.database.DbpropertyAction" method="paste">
+			<result type="chain">editTableproperty</result>
+        </action>
+		<action name="editProperty" class="com.xx.platform.web.actions.database.DbpropertyAction" method="editProperty">
+             <result>/pages/model/database/tableproperty.jsp</result>			 
+        </action>
+		<action name="editPropertyDo" class="com.xx.platform.web.actions.database.DbpropertyAction" method="editPropertyDo">
+		<result name="input" type="xdtech-redirect-action">
+				<param name="actionName">editTableproperty</param>
+				<param name="dbtable.id">${tableproperty.dbtableid}</param>
+				<param name="message">${message}</param>
+			</result>
+		
+             <result type="xdtech-redirect-action">
+				<param name="actionName">editTableproperty</param>
+				<param name="dbtable.id">${tableproperty.dbtableid}</param>
+			</result>
+        </action>
+		<action name="addPropertyDo" class="com.xx.platform.web.actions.database.DbpropertyAction" method="addPropertyDo">
+		<result name="input" type="xdtech-redirect-action">
+				<param name="actionName">editTableproperty</param>
+				<param name="dbtable.id">${tableproperty.dbtableid}</param>
+				<param name="message">${message}</param>
+		</result>
+             <result type="xdtech-redirect-action">
+				<param name="actionName">editTableproperty</param>
+				<param name="dbtable.id">${tableproperty.dbtableid}</param>
+			</result>
+        </action>
+		<action name="dbdata" class="com.xx.platform.web.actions.database.DbdataAction" method="list">
+            <result>/pages/model/database/dbdata.jsp</result>
+        </action>
+		<action name="listDbdata" class="com.xx.platform.web.actions.database.DbdataAction" method="listDbdata">
+            <result>/pages/model/database/dbdataList.jsp</result>
+        </action>
+        <action name="fileCrawlRefreshAll" class="com.xx.platform.web.actions.database.DbtableAction" method="refreshFileCrawl">
+              <result type="xdtech-redirect-action">refreshsign
+			<param name="actionName">refreshsign</param>
+			<param name="message">${message}</param>
+			</result>
+        </action>
+	</package>
+	<!--数据库管理结束-->
+
+	<!--系统管理开始-->
+	<package name="system" namespace="/system" extends="search">
+		<result-types>
+            <result-type name="xdtech-redirect-action" class="com.xx.platform.web.dispatcher.ServletActionRedirectResult"/>
+        </result-types>
+		<!-- IP地址管理 -->        
+        <action name="ipCheckIndex" class="com.xx.platform.web.actions.system.IPCheckAction" method="ipCheckIndex">
+            <result>/pages/model/system/ipcheck/index.jsp</result>
+        </action>
+        <action name="ipInsert" class="com.xx.platform.web.actions.system.IPCheckAction" method="ipInsert">
+           <result>/pages/model/system/ipcheck/index.jsp</result>
+        </action>
+        <action name="ipDeleteByP" class="com.xx.platform.web.actions.system.IPCheckAction" method="ipDeleteByP">
+            <result>/pages/model/system/ipcheck/index.jsp</result>
+        </action>
+        <action name="ipDeleteByCondition" class="com.xx.platform.web.actions.system.IPCheckAction" method="ipDeleteByCondition">
+            <result>/pages/model/system/ipcheck/index.jsp</result>
+        </action>
+        <action name="ipView" class="com.xx.platform.web.actions.system.IPCheckAction" method="ipView">
+            <result>/pages/model/system/ipcheck/view.jsp</result>
+        </action>
+        <action name="ipUpdate" class="com.xx.platform.web.actions.system.IPCheckAction" method="ipUpdate">
+            <result>/pages/model/system/ipcheck/index.jsp</result>
+        </action>
+		<!-- IP地址管理 --> 
+		<action name="password" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/system/password.jsp</result>
+        </action>
+
+		<action name="upfiledo" class="com.xx.platform.web.actions.crawl.SiteManageAction" method="addFile">
+			<interceptor-ref name ="fileUploadStack" />               
+            <result>/pages/model/system/message.jsp</result>
+        </action>
+
+		<action name="cpwd" class="com.xx.platform.web.actions.user.UserAction" method="changePwd">
+			<result name="input" type="chain">password</result>
+			<result name="success" type="redirect-action">control</result>
+        </action>
+		<action name="crawlthread" class="com.xx.platform.web.actions.system.XdtechsiteAction" method="execute">
+			<result>/pages/model/system/crawlthread.jsp</result>
+        </action>
+		<action name="crawlthreadsetting" class="com.xx.platform.web.actions.system.XdtechsiteAction" method="setting">
+			<result type="chain">crawlthread</result>
+        </action>
+		<action name="crawldepth" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/system/crawldepth.jsp</result>
+        </action>
+		<action name="crontabtask" class="com.xx.platform.web.actions.system.CrontabtaskAction" method="list">
+			<result>/pages/model/system/crontabtask.jsp</result>
+        </action>
+		<action name="crontabtaskauto" class="com.xx.platform.web.actions.system.CrontabtaskAction" method="addautoDo">
+			<result type="redirect-action">crontabtask</result>
+        </action>
+        <!-- 获得正在执行的定时任务数量 -->
+        <action name="getTaskStartCount" class="com.xx.platform.web.actions.system.CrontabtaskAction" method="getStartCount">
+        </action>
+		<action name="crontabtaskdel" class="com.xx.platform.web.actions.system.CrontabtaskAction" method="delDo">
+			<result type="redirect-action">crontabtask</result>
+        </action>
+		<action name="timegap" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/system/timegap.jsp</result>
+        </action>
+
+		<action name="logmanage" class="com.xx.platform.web.actions.system.LogAction" method="listLog">
+            <result>/pages/model/system/logmanage.jsp</result>
+        </action>
+		<action name="dellog" class="com.xx.platform.web.actions.system.LogAction" method="deleteLog">
+            <!-- <result type="chain">logmanage</result> -->
+            <result>/pages/model/system/logmanage.jsp</result>
+        </action>
+		<action name="viewlog" class="com.xx.platform.web.actions.system.LogAction" method="viewLog">
+            <!-- <result type="redirect-action">logmanage</result> -->
+        </action>
+        
+        <action name="sqlviewlog" class="com.xx.platform.web.actions.system.SqlLogAction" method="listLog">
+            <result>/pages/model/system/sqllog.jsp</result>
+        </action>
+		<action name="sqldellog" class="com.xx.platform.web.actions.system.SqlLogAction" method="deleteLog">
+            <result type="redirect-action">sqlviewlog</result>
+        </action>
+		<action name="sqldelalllog" class="com.xx.platform.web.actions.system.SqlLogAction" method="deleteAllLog">
+            <result type="redirect-action">sqlviewlog</result>
+        </action>
+        
+		<action name="control" class="com.xx.platform.web.actions.system.ControlAction" method="console">
+            <interceptor-ref name="openOperStrack"/>
+            <result>/pages/model/system/control.jsp</result>
+        </action>
+		<action name="system" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/system/system.jsp</result>
+        </action>
+		<action name="sysinfo" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/system/sysinfo.jsp</result>
+        </action>
+        <!-- 同步 -->
+        <action name="synchroList" class="com.xx.platform.web.actions.system.SynchroAction" method="list">
+			<interceptor-ref name="openOperStrack"/>
+			<result>/pages/model/system/synchroList.jsp</result>
+        </action>
+		<action name="synchroAddDo" class="com.xx.platform.web.actions.system.SynchroAction" method="addDo">
+            <interceptor-ref name="openOperStrack"/>
+            <result name="success" type="xdtech-redirect-action">
+				<param name="actionName">synchroList</param>
+				<param name="message">${message}</param>
+			</result>
+        </action>
+		<action name="synchroEdit" class="com.xx.platform.web.actions.system.SynchroAction" method="edit">
+            <interceptor-ref name="openOperStrack"/>
+            <result>/pages/model/system/synchroEdit.jsp</result>
+        </action>
+		<action name="synchroEditDo" class="com.xx.platform.web.actions.system.SynchroAction" method="editDo">
+            <interceptor-ref name="openOperStrack"/>
+            <result name="success" type="xdtech-redirect-action">
+				<param name="actionName">synchroList</param>
+				<param name="message">${message}</param>
+			</result>
+        </action>
+        <action name="synchroDelDo" class="com.xx.platform.web.actions.system.SynchroAction" method="delDo">
+           <interceptor-ref name="openOperStrack"/>
+            <result name="success" type="xdtech-redirect-action">
+				<param name="actionName">synchroList</param>
+				<param name="message">${message}</param>
+			</result>
+        </action>
+        <!-- 集群 -->
+        <action name="startSynchro" class="com.xx.platform.web.actions.system.ControlAction" method="startSynchro">
+            <interceptor-ref name="openOperStrack"/>
+            <result type="redirect">/index.dhtml</result>
+        </action>
+        <action name="stopSynchro" class="com.xx.platform.web.actions.system.ControlAction" method="stopSynchro">
+            <interceptor-ref name="openOperStrack"/>
+            <result type="redirect">/index.dhtml</result>
+        </action>
+        <!-- 分布式 -->
+		<action name="startDiserver" class="com.xx.platform.web.actions.system.ControlAction" method="startDiserver">
+            <result type="redirect">/index.dhtml</result>
+        </action>
+		<action name="stopDiserver" class="com.xx.platform.web.actions.system.ControlAction" method="stopDiserver">
+            <result type="redirect">/index.dhtml</result>
+        </action>
+		<action name="diserverManage" class="com.xx.platform.web.actions.system.DiserverAction" method="list">
+            <result>/pages/model/system/diserver.jsp</result>
+        </action>
+		<action name="diserverAddDo" class="com.xx.platform.web.actions.system.DiserverAction" method="addDo">
+			<result name="input" type="chain">diserverManage</result>
+            <result type="redirect-action">diserverManage</result>
+        </action>
+		<action name="editDiserver" class="com.xx.platform.web.actions.system.DiserverAction" method="editDiserver">
+            <result>/pages/model/system/diserverEdit.jsp</result>
+        </action>
+		<action name="diserverEditDo" class="com.xx.platform.web.actions.system.DiserverAction" method="editDo">
+			<result name="input" type="chain">diserverManage</result>
+            <result type="redirect-action">diserverManage</result>
+        </action>
+		<action name="consoleDiserver" class="com.xx.platform.web.actions.system.DiserverAction" method="consoleDiserver">
+            <result>/pages/model/system/diserverConsole.jsp</result>
+        </action>
+		<action name="consoleDiserverCommandDB" class="com.xx.platform.web.actions.system.DiserverAction" method="consoleDiserverCommandDB">
+            <result type="chain">consoleDiserver</result>
+        </action>
+        <action name="consoleDiserverCommandFile" class="com.xx.platform.web.actions.system.DiserverAction" method="consoleDiserverCommandFile">
+            <result type="chain">consoleDiserver</result>
+        </action>
+	        <!--数据库备份-->
+		<action name="dbback" class="com.xx.platform.web.actions.BaseAction" method="execute">
+            <result>/pages/model/system/dbbackres.jsp</result>
+        </action>
+		<action name="dbbackdo" class="com.xx.platform.web.actions.system.DbBackupAction" method="DbDackUp">
+		   <result>/pages/model/system/dbbackres.jsp</result>
+        </action>
+        <action name="dbRes" class="com.xx.platform.web.actions.system.DbBackupAction" method="dbRes">
+        	<result>/pages/model/system/dbmessage.jsp</result>		 
+        </action>
+	<!--系统管理结束-->
+	</package>
+	<package name="report" namespace="/report"  extends="search">
+		<action name="index" class="com.xx.platform.web.actions.search.SearchReportAction" method="execute">
+        	<result>/pages/model/search/reportIndex.jsp</result>		 
+        </action>
+        <action name="hotspotStatistics" class="com.xx.platform.web.actions.search.SearchReportAction" method="hotspotStatistics">
+        	<result>/pages/model/search/hotspot.jsp</result>		 
+        </action>
+        <action name="noResult" class="com.xx.platform.web.actions.search.SearchReportAction" method="noResult">
+        	<result>/pages/model/search/noresult.jsp</result>		 
+        </action>
+        <action name="timeSeg" class="com.xx.platform.web.actions.search.SearchReportAction" method="timeSeg">
+        	<result>/pages/model/search/timeseg.jsp</result>		 
+        </action>
+	</package>
+	<package name="project" namespace="/project"  extends="search">
+		<action name="test" class="com.xx.platform.web.actions.system.ProjectAction" method="test">
+        	<result>/index.jsp</result>		 
+        </action>
+		<action name="publish" class="com.xx.platform.web.actions.system.ProjectAction" method="publish">
+        	<result>/pages/model/system/project/projectInfo.jsp</result>		 
+        </action>
+        <action name="reback" class="com.xx.platform.web.actions.system.ProjectAction" method="reback">
+        	<result>/pages/model/system/project/projectInfo.jsp</result>		 
+        </action>
+		<action name="index" class="com.xx.platform.web.actions.system.ProjectAction" method="query">
+        	<result>/pages/model/system/project/index.jsp</result>		 
+        </action>
+        <action name="insert" class="com.xx.platform.web.actions.system.ProjectAction" method="insert">
+        	<result>/pages/model/system/project/index.jsp</result>		 
+        </action>
+        <action name="deleteByKey" class="com.xx.platform.web.actions.system.ProjectAction" method="deleteByKey">
+        	<result>/pages/model/system/project/projectlist.jsp</result>		 
+        </action>
+        <action name="search" class="com.xx.platform.web.actions.system.ProjectAction" method="query">
+       		 <result>/pages/model/system/project/projectlist.jsp</result>
+        </action>
+        <action name="viewProject" class="com.xx.platform.web.actions.system.ProjectAction" method="viewProject">
+       		 <result>/pages/model/system/project/sprojectview.jsp</result>
+        </action>
+        <action name="updateProject" class="com.xx.platform.web.actions.system.ProjectAction" method="updateProject">
+       		 <result>/pages/model/system/project/projectInfo.jsp</result>
+        </action>
+        <action name="getSourceFile" class="com.xx.platform.web.actions.system.ProjectAction" method="getSourceFile">
+       		 <result>/pages/model/system/project/sourceFiles.jsp</result>
+        </action>
+        <action name="deleteSourceFile" class="com.xx.platform.web.actions.system.ProjectAction" method="deleteSourceFile">
+       		 <!-- <result>/pages/model/system/project/sourceFiles.jsp</result> -->
+        </action>
+        <action name="downloadSourceFile" class="com.xx.platform.web.actions.system.ProjectAction" method="downloadSourceFile">
+		</action>
+		<action name="renameFile" class="com.xx.platform.web.actions.system.ProjectAction" method="renameFile">
+       		 <!-- <result>/pages/model/system/project/sourceFiles.jsp</result> -->
+        </action>
+        <action name="findFile" class="com.xx.platform.web.actions.system.ProjectAction" method="findFile">
+        </action>
+        <action name="uploadSource" class="com.xx.platform.web.actions.system.ProjectAction" method="uploadSource">
+       		<result>/pages/model/system/project/uploadsuccess.jsp</result>
+        </action>
+        <action name="userManageIndex" class="com.xx.platform.web.actions.system.ProjectUserManageAction" method="search">
+       		<result>/pages/model/system/project/usermanageIndex.jsp</result>
+        </action>
+        <action name="findByPage" class="com.xx.platform.web.actions.system.ProjectUserManageAction" method="search">
+       		<result>/pages/model/system/project/userList.jsp</result>
+        </action>
+        <action name="userinsert" class="com.xx.platform.web.actions.system.ProjectUserManageAction" method="insert">
+       		<result>/pages/model/system/project/usermanageIndex.jsp</result>
+        </action>
+        <action name="userdelete" class="com.xx.platform.web.actions.system.ProjectUserManageAction" method="delete">
+       		<result>/pages/model/system/project/usermanageIndex.jsp</result>
+        </action>
+        <action name="viewUser" class="com.xx.platform.web.actions.system.ProjectUserManageAction" method="viewUser">
+			<result>/pages/model/system/project/userInfo.jsp</result>
+        </action>
+        <action name="updateUser" class="com.xx.platform.web.actions.system.ProjectUserManageAction" method="updateUser">
+			<result>/pages/model/system/project/usermanageIndex.jsp</result>
+        </action>
+        <action name="projectAddUser" class="com.xx.platform.web.actions.system.ProjectAction" method="addUser">
+			<result>/pages/model/system/project/userListTwo.jsp</result>
+        </action>
+        <action name="removeProjectUser" class="com.xx.platform.web.actions.system.ProjectAction" method="removeUser">
+			<result>/pages/model/system/project/userListTwo.jsp</result>
+        </action>
+        
+        <action name="getInusers" class="com.xx.platform.web.actions.system.ProjectAction" method="getInusers">
+			<result>/pages/model/system/project/inUsers.jsp</result>
+        </action>
+        <action name="getNotInusers" class="com.xx.platform.web.actions.system.ProjectAction" method="getNotInusers">
+			<result>/pages/model/system/project/noInUsers.jsp</result>
+        </action>
+        <action name="openFileUpload" class="com.xx.platform.web.actions.system.ProjectAction" method="execute">
+			<result>/pages/model/system/project/uploadFilePage.jsp</result>
+        </action>
+        <action name="editScript" class="com.xx.platform.web.actions.system.ProjectAction" method="editSource">
+			<result>/pages/model/system/project/scriptEditLive.jsp</result>
+        </action>
+        
+        <action name="getAllFilesUnderFileXML" class="com.xx.platform.web.actions.system.ProjectAction" method="getAllFilesUnderFileXML">
+        </action>
+        <action name="deleteSourceByTree" class="com.xx.platform.web.actions.system.ProjectAction" method="deleteSourceByTree">
+        </action>
+        <action name="getSourceFileContent" class="com.xx.platform.web.actions.system.ProjectAction" method="getSourceFileContent">
+        </action>
+        <action name="editSource" class="com.xx.platform.web.actions.system.ProjectAction" method="editSource">
+        </action>
+        <action name="treeMenu" class="com.xx.platform.web.actions.system.ProjectAction" method="treeMenu">
+        </action>
+        <action name="getFilesDhtml" class="com.xx.platform.web.actions.system.ProjectAction" method="getFilesDhtml">
+        	<result>/pages/model/system/project/fileList.jsp</result>
+        </action>
+        <action name="DeleteByPath" class="com.xx.platform.web.actions.system.ProjectAction" method="deleteFileByPath">
+        	<result>/pages/model/system/project/fileList.jsp</result>
+        </action>
+        <action name="getAllGuid" class="com.xx.platform.web.actions.system.GuidAction" method="getAllGuid">
+        </action>
+        <action name="editGuide" class="com.xx.platform.web.actions.system.GuidAction" method="editGuide">
+        	<result name="input">/pages/model/system/project/guideAdd.jsp</result>
+        	<result name="success">/pages/model/system/project/guideEdit.jsp</result>
+        </action>
+        <action name="findBynameOrCode" class="com.xx.platform.web.actions.system.GuidAction" method="findBynameOrCode">
+        </action>
+        <action name="insertGuide" class="com.xx.platform.web.actions.system.GuidAction" method="insertGuide">
+        </action>
+        <action name="deleteGuide" class="com.xx.platform.web.actions.system.GuidAction" method="deleteGuide">
+        </action>
+        <action name="goToAddSon" class="com.xx.platform.web.actions.system.GuidAction" method="execute">
+        	<result name="success">/pages/model/system/project/guideAdd.jsp</result>
+        </action>
+        <action name="findBynameOrCodeAndID" class="com.xx.platform.web.actions.system.GuidAction" method="findBynameOrCodeAndID">
+        </action>
+        <action name="updateGuide" class="com.xx.platform.web.actions.system.GuidAction" method="updateGuide">
+        </action>
+        <!-- 获得一个节点下的所有的节点的xml表现形式，xml规则符合dhtmlxtree的xml规则 -->
+        <action name="getAllSunXml" class="com.xx.platform.web.actions.system.GuidAction" method="getAllSunXml">
+        	<interceptor-ref name="searchStrack"/>
+        	<result type="xslt"></result>
+        </action>
+        <!-- 创建一个新文件 -->
+        <action name="createNewFile" class="com.xx.platform.web.actions.system.ProjectAction" method="createNewFile">
+        </action>
+        <!-- 通过拖动改变节点的位置 -->
+        <action name="changePosition" class="com.xx.platform.web.actions.system.GuidAction" method="changePosition">
+        </action>
+        <!-- 前台显示的导航 -->
+        <action name="getAllGuidByProjectCode" class="com.xx.platform.web.actions.system.GuidAction" method="getAllGuidByProjectCode">
+        </action>
+	</package>
+</struts>

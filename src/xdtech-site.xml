@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="xdtech-conf.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<nutch-conf>
+	<property>
+		<name>company.short</name>
+		<value>线点</value>
+		<description>company for short</description>
+	</property>
+
+	<property>
+		<name>company.full</name>
+		<value>北京线点科技有限公司</value>
+		<description>company full name</description>
+	</property>
+
+	<property>
+		<name>company.url</name>
+		<value>http://www.xd-tech.com.cn</value>
+		<description>company url</description>
+	</property>
+
+	<property>
+		<name>is.bottom.info</name>
+		<value>0</value>
+		<description>is show bottom info. 0:show 1:no show</description>
+	</property>
+
+	<property>
+		<name>result.right.title</name>
+		<value>线点科技垂直搜索</value>
+		<description>result right title</description>
+	</property>
+
+	<property>
+		<name>result.right.url</name>
+		<value>http://www.xd-tech.com.cn</value>
+		<description>result right url</description>
+	</property>
+
+	<!-- <property>
+		<name>search.query.parse</name>
+		<value>xdht</value>
+		<description>parse rule default basic,ext:xdht</description>
+	</property> -->
+
+	<property>
+		<name>index.stopwords.enable</name>
+		<value>false</value>
+		<description>是否启用停止词，用于一元分词过滤</description>
+	</property>
+
+	<property>
+		<name>index.stop.words</name>
+		<value>
+			a,as,at,be,but,by,these,they,this,to,was,for,if,in,into,is,it,no,such,t,that,the,or,an,and,are,s,there,their,then,not,of,on,will,with,是,的,不,可,好,无
+		</value>
+		<description>停止词列表</description>
+	</property>
+	<property>
+		<name>index.filterwords.enable</name>
+		<value>false</value>
+		<description>是否启用过滤词,用于单字符分词过滤</description>
+	</property>
+	<property>
+		<name>index.filter.words</name>
+		<value>,.?'\:{}[]~!@#$%^*()_+|\，。？；”【】！‘/-;《》　（）&lt;&gt;&amp;</value>
+		<description>过滤词列表:默认：,.?'\:{}[]~!@#$%^*()_+|\，。？；”【】！‘/-;《》　（）&lt;&gt;&amp;</description>
+	</property>
+	<property>
+		<name>default.indexview.max</name>
+		<value>2000</value>
+		<description>索引查看的时候，页面最多能够显示的词数。</description>
+	</property>
+	<property>
+		<name>oracle.errorcolumn</name>
+		<value>LONG RAW,LONG,CLOB,BLOB,RAW</value>
+		<description>oracle不能作为更新字段的数据库字段类型</description>
+	</property>
+		<property>
+		<name>mysql.errorcolumn</name>
+		<value>TIME,float,YEAR,BINARY,VARBINARY,CHAR,BIT,BOOLEAN,TINYBLOB,BLOB,MEDIUMBLOB,LONGBLOB,GEOMETRY</value>
+		<description>mysql不能作为更新字段的数据库字段类型</description>
+	</property>
+		<property>
+		<name>mssql.errorcolumn</name>
+		<value>text,ntext,image,bit,float,binary,sql_variant,varbinary,uniqueidentifier,char</value>
+		<description>mssql不能作为更新字段的数据库字段类型</description>
+	</property>
+	<property>
+		<name>index.mergeNum</name>
+		<value>20</value>
+		<description>文件合并数量控制</description>
+	</property>
+	<property>
+		<name>default.parse.time</name>
+		<value>60000</value>
+		<description>文件解析最大时长</description>
+	</property>
+	<property>
+		<name>index.content.field</name>
+		<value>false</value>
+		<description>默认是否索引content字段</description>
+	</property>
+	<property>
+		<name>default.rammergedocs.limit</name>
+		<value>2048</value>
+		<description>使用内存或MinMergeDocs的分界线，默认2048，如果大于2048，就表示使用MinMergeDocs控制缓存，否则使用RAM控制</description>
+	</property>
+	<property>
+		<name>filefetcher.threads.fetch</name>
+		<value>1</value>
+		<description>为文件采集启动的最大线程数量</description>
+	</property>
+	<property>
+		<name>filefetcher.everytime.count</name>
+		<value>20</value>
+		<description>文件采集每轮采集最大文件数</description>
+	</property>
+	<property>
+		<name>console.validate.code</name>
+		<value>false</value>
+		<description>后台访问的时候是否需要验证码</description>
+	</property>
+	<property>
+		<name>textfilter.wordlength</name>
+		<value>3</value>
+		<description>解析PDF过滤内容时，连续可见字符的长度</description>
+	</property>
+ 	<property>
+		<name>char.ZHConverter</name>
+		<value>true</value>
+		<description>是否启用繁体字与简体字的转化,true:启用，false:不起用</description>
+	</property>
+	<property>
+		<name>crawler.db.repeat.fix</name>
+		<value>
+			docType,dataSource,url
+		</value>
+		<description>爬虫在抓取数据库信息时需要拼接去重信息字符串，该选项生命的字段不会加入到去重信息中</description>
+	</property>
+	<property>
+		<name>search.use.pinYin</name>
+		<value>true</value>
+		<description>是否启用拼音检索功能</description>
+	</property>
+	<property>
+		<name>nutch.crawler.eml</name>
+		<value>true</value>
+		<description>爬虫爬取邮件时是否抓取附件内容</description>
+	</property>
+</nutch-conf>
